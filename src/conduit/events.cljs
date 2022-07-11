@@ -35,7 +35,7 @@
 
 ;; -- Helpers -----------------------------------------------------------------
 ;;
-(def api-url "https://api.realworld.io/api")
+(def api-url "http://localhost:6003/api")
 
 (defn endpoint
   "Concat any params to api-url separated by /"
@@ -278,7 +278,7 @@
                  :response-format (json-response-format {:keywords? true}) ;; json response and all keys to keywords
                  :on-success      [:get-tags-success]    ;; trigger :get-tags-success event event
                  :on-failure      [:api-request-error {:request-type :get-tags ;; trigger :api-request-error event with request type :get-tags
-                                                       :loading :tags}]}})) 
+                                                       :loading :tags}]}}))
 
 (reg-event-db
  :get-tags-success
@@ -339,8 +339,8 @@
  :delete-comment                                       ;; triggered when a user deletes an article
  (fn [{:keys [db]} [_ comment-id]]                     ;; comment-id = 1234
    {:db         (-> db
-                  (assoc-in [:loading :comments] true)
-                  (assoc :active-comment comment-id))
+                    (assoc-in [:loading :comments] true)
+                    (assoc :active-comment comment-id))
     :http-xhrio {:method          :delete
                  :uri             (endpoint "articles" (:active-article db) "comments" comment-id) ;; evaluates to "api/articles/:slug/comments/:comment-id"
                  :headers         (auth-header db)       ;; get and pass user token obtained during login
